@@ -36,6 +36,7 @@ class ScoobyData(object):
         plugins_data_json = {}
         for plugin_name in self.plugins_data:
             plugin_data = self.plugins_data[plugin_name]
+            print(plugin_name, plugin_data.as_json_dict())
             plugins_data_json[plugin_name] = plugin_data.as_json_dict()
         return json.dumps({
             'plugins_data': plugins_data_json

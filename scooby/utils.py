@@ -1,6 +1,7 @@
 import os
 import sys
 import redis
+import inspect
 
 from django.conf import settings
 
@@ -41,4 +42,20 @@ def get_location(stack):
     }
 
 def get_redis():
-  return redis.StrictRedis(**settings.SCOOBY_REDIS_CONFIG)
+    return redis.StrictRedis(**settings.SCOOBY_REDIS_CONFIG)
+
+def get_stack():
+    frame_infos = inspect.stack(11)
+    stack = []
+    for frame_info in frame_infos[2:]:
+        local_vars = inspect.getargvalues(frame_info.frame).locals
+        local_vars = {var: repr(local_vars[var]) for var in local_vars}
+        stack.append({
+            'filename': frame_info.filename,
+            'lineno': frame_info.lineno,
+            'function': frame_info.function,
+            'code_context': frame_info.code_context,
+            'local_vars': local_vars,
+        })
+    del frame_infos
+    return stack

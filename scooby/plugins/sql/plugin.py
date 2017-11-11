@@ -8,18 +8,24 @@ from scooby.plugins_base import Plugin
 from scooby.utils import get_location
 
 
-def build_query(query, params):
+def escaped_string(s):
+    return "'%s'" % (
+        s.replace('\\', '\\\\').replace("'", "''")
+    )
+
+def get_escaped_params(params):
     escaped_params = []
     for param in params:
         if isinstance(param, str):
-            escaped_params.append("'%s'" %
-                param.replace('\\', '\\\\').replace("'", "''")
-            )
+            escaped_params.append(escaped_string(param))
+        elif isinstance(param, bytes):
+            escaped_params.append(escaped_string(param.decode())) 
         elif isinstance(param, bool):
             escaped_params.append(int(param))
         else:
             escaped_params.append(param)
-    return query % tuple(escaped_params)
+    return tuple(escaped_params)
+    
 
 threadlocal = threading.local()
 
@@ -45,12 +51,14 @@ def execute_sql(self, *args, **kwargs):
     try:
         return self.execute_sql_default(*args, **kwargs)
     finally:
-        time_taken = (datetime.now() - start).total_seconds() * 1000.0
+        end = datetime.now()
+        time_taken = (end - start).total_seconds() * 1000.0
         stack = traceback.extract_stack()
         threadlocal.sql_plugin_data.insert(
             query=q,
             params=params,
             start=start,
+            end=end,
             time_taken=time_taken,
             using=self.using,
             location=get_location(stack))
@@ -60,12 +68,14 @@ class SQLPluginData(object):
     def __init__(self):
         self.queries = []
 
-    def insert(self, query, params, start, time_taken, using, location):
+    def insert(self, query, params, start, end, time_taken, using, location):
+        params = get_escaped_params(params)
         self.queries.append({
             'query_template': query,
             'params': params,
-            'query': build_query(query, params),
+            'query': (query % params),
             'start': start.isoformat(),
+            'end': end.isoformat(),
             'time_taken': time_taken,
             'using': using,
             'location': location,

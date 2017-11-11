@@ -13,6 +13,8 @@ class ProcessTimePluginData(object):
         if self.start and self.end:
             process_time = int((self.end - self.start).total_seconds() * 1000)
         return {
+            'start': self.start and self.start.isoformat(),
+            'end': self.end and self.end.isoformat(),
             'process_time': process_time,
         }
 
