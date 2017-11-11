@@ -6,6 +6,19 @@ from django.db.models.sql.compiler import SQLCompiler
 from scooby.plugins_base import Plugin
 
 
+def build_query(query, params):
+    escaped_params = []
+    for param in params:
+        if isinstance(param, str):
+            escaped_params.append("'%s'" %
+                param.replace('\\', '\\\\').replace("'", "''")
+            )
+        elif isinstance(param, bool):
+            escaped_params.append(int(param))
+        else:
+            escaped_params.append(param)
+    return query % tuple(escaped_params)
+
 threadlocal = threading.local()
 
 def init_threadlocal(threadlocal):
@@ -30,9 +43,10 @@ def execute_sql(self, *args, **kwargs):
     try:
         return self.execute_sql_default(*args, **kwargs)
     finally:
-        time_taken = int((datetime.now() - start).total_seconds() * 1000.0)
+        time_taken = (datetime.now() - start).total_seconds() * 1000.0
         threadlocal.sql_plugin_data.insert(
             query=q,
+            params=params,
             start=start,
             time_taken=time_taken,
             using=self.using)
@@ -42,9 +56,11 @@ class SQLPluginData(object):
     def __init__(self):
         self.queries = []
 
-    def insert(self, query, start, time_taken, using):
+    def insert(self, query, params, start, time_taken, using):
         self.queries.append({
-            'query': query,
+            'query_template': query,
+            'params': params,
+            'query': build_query(query, params),
             'start': start.isoformat(),
             'time_taken': time_taken,
             'using': using,

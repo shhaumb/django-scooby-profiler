@@ -27,7 +27,7 @@ class ScoobyData(object):
 
     def on_process_response(self, request, response):
         for plugin in self.plugins:
-            if hasattr(plugin, 'on_process_req'):
+            if hasattr(plugin, 'on_process_response'):
                 plugin_data = self.plugins_data[plugin.name]
                 plugin.on_process_response(
                     plugin_data, request, response)

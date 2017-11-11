@@ -5,6 +5,6 @@ from .utils import get_redis
 
 def get_data(request, uuid):
     redis =  get_redis()
-    return HttpResponse(
-        redis.get(uuid) or '',
-        content_type="application/json")
+    json_data = redis.get(uuid) or ''
+    redis.delete(uuid)
+    return HttpResponse(json_data, content_type="application/json")
