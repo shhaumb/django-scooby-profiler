@@ -1,9 +1,11 @@
+import traceback
 import threading
 from datetime import datetime
 
 from django.db.models.sql.compiler import SQLCompiler
 
 from scooby.plugins_base import Plugin
+from scooby.utils import get_location
 
 
 def build_query(query, params):
@@ -44,19 +46,21 @@ def execute_sql(self, *args, **kwargs):
         return self.execute_sql_default(*args, **kwargs)
     finally:
         time_taken = (datetime.now() - start).total_seconds() * 1000.0
+        stack = traceback.extract_stack()
         threadlocal.sql_plugin_data.insert(
             query=q,
             params=params,
             start=start,
             time_taken=time_taken,
-            using=self.using)
+            using=self.using,
+            location=get_location(stack))
 
 
 class SQLPluginData(object):
     def __init__(self):
         self.queries = []
 
-    def insert(self, query, params, start, time_taken, using):
+    def insert(self, query, params, start, time_taken, using, location):
         self.queries.append({
             'query_template': query,
             'params': params,
@@ -64,6 +68,7 @@ class SQLPluginData(object):
             'start': start.isoformat(),
             'time_taken': time_taken,
             'using': using,
+            'location': location,
         })
 
     def as_json_dict(self):
