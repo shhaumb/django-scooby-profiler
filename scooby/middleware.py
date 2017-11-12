@@ -25,7 +25,7 @@ class ScoobyMiddleware(object):
         request.scooby_data.on_process_response(request, response)
         unique_hex = uuid.uuid4().hex
         response['X-Scooby'] = unique_hex
-        # Set data in redis for an 10 mins.
+        # Set data in redis for 2 mins.
         redis = get_redis()
-        redis.set(unique_hex, request.scooby_data.as_json(), 600)
+        redis.set(unique_hex, request.scooby_data.as_json(), 120)
         return response

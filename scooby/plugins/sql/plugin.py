@@ -1,11 +1,10 @@
-import traceback
 import threading
 from datetime import datetime
 
 from django.db.models.sql.compiler import SQLCompiler
 
 from scooby.plugins_base import Plugin
-from scooby.utils import get_location
+from scooby.utils import get_stack
 
 
 def escaped_string(s):
@@ -53,7 +52,6 @@ def execute_sql(self, *args, **kwargs):
     finally:
         end = datetime.now()
         time_taken = (end - start).total_seconds() * 1000.0
-        stack = traceback.extract_stack()
         threadlocal.sql_plugin_data.insert(
             query=q,
             params=params,
@@ -61,14 +59,15 @@ def execute_sql(self, *args, **kwargs):
             end=end,
             time_taken=time_taken,
             using=self.using,
-            location=get_location(stack))
+            stack=get_stack()
+        )
 
 
 class SQLPluginData(object):
     def __init__(self):
         self.queries = []
 
-    def insert(self, query, params, start, end, time_taken, using, location):
+    def insert(self, query, params, start, end, time_taken, using, stack):
         params = get_escaped_params(params)
         self.queries.append({
             'query_template': query,
@@ -78,7 +77,7 @@ class SQLPluginData(object):
             'end': end.isoformat(),
             'time_taken': time_taken,
             'using': using,
-            'location': location,
+            'stack': stack,
         })
 
     def as_json_dict(self):
