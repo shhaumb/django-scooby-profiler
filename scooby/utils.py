@@ -25,7 +25,8 @@ def curate_filename(filename):
 
 def get_repr(value):
     if isinstance(value, (
-            int, float, bool, str, list, tuple, dict, Model)):
+            int, float, bool, str, list, tuple, dict,
+            type(None), Model)):
         return repr(value)
     else:
         return "<%s>" % (value.__class__.__name__)
