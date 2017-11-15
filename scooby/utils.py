@@ -60,7 +60,10 @@ def get_repr(value):
             '%s: %s' % (get_repr(key), get_repr(value)) for (key, value) in
             value.items()]))
     else:
-        return "<%s>" % (value.__class__.__name__)
+        try:
+            return "<%s>" % (value.__class__.__name__)
+        except:
+            return "<<Some object>>"
 
 def get_stack():
     frame_infos = inspect.stack(9)
