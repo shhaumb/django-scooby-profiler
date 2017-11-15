@@ -5,7 +5,7 @@ from setuptools import setup
 # setup the project
 setup(
     name="scooby-django",
-    version="0.0.1",
+    version="0.0.2",
     author="HackerEarth",
     author_email="support@hackerearth.com",
     description="Scooby",
