@@ -2,7 +2,6 @@ import os
 import sys
 import redis
 import inspect
-import __builtin__
 
 from django.conf import settings
 from django.db.models import Model
@@ -26,11 +25,11 @@ def curate_filename(filename):
 
 
 def get_repr(value):
-    if not hasattr(__builtin__, 'unicode'):
+    try:
+        unicode_cls = unicode
+    except NameError:
         # Python3
         unicode_cls = str
-    else:
-        unicode_cls = unicode
     if isinstance(value, (
             int, float, bool, str, unicode_cls, type(None))):
         return repr(value)
