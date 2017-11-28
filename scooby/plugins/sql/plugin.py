@@ -18,7 +18,7 @@ def get_escaped_params(params):
         if isinstance(param, str):
             escaped_params.append(escaped_string(param))
         elif isinstance(param, bytes):
-            escaped_params.append(escaped_string(param.decode())) 
+            escaped_params.append(escaped_string(param.decode("iso-8859-1"))) 
         elif isinstance(param, bool):
             escaped_params.append(int(param))
         else:
