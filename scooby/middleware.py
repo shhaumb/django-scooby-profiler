@@ -16,11 +16,14 @@ class ScoobyMiddleware(object):
     def process_view(self, request, view, view_args, view_kwargs):
         if not settings.SCOOBY_DEBUG:
             return
-        request.scooby_data.on_process_view(
-            request, view, view_args, view_kwargs)
+        if hasattr(request, 'scooby_data'):
+            request.scooby_data.on_process_view(
+                request, view, view_args, view_kwargs)
 
     def process_response(self, request, response):
         if not settings.SCOOBY_DEBUG:
+            return response
+        if not hasattr(request, 'scooby_data'):
             return response
         request.scooby_data.on_process_response(request, response)
         unique_hex = uuid.uuid4().hex
