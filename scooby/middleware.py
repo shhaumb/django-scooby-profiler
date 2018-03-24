@@ -6,6 +6,8 @@ from .base import ScoobyData
 from .utils import get_redis
 
 
+redis = get_redis()
+
 class ScoobyMiddleware(object):
     def process_request(self, request):
         if not settings.SCOOBY_DEBUG:
@@ -29,6 +31,5 @@ class ScoobyMiddleware(object):
         unique_hex = uuid.uuid4().hex
         response['X-Scooby'] = unique_hex
         # Set data in redis for 2 mins.
-        redis = get_redis()
         redis.set(unique_hex, request.scooby_data.as_json(), 120)
         return response
