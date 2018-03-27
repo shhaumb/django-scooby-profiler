@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 
 from django.conf import settings
 
@@ -30,6 +31,10 @@ class ScoobyMiddleware(object):
         request.scooby_data.on_process_response(request, response)
         unique_hex = uuid.uuid4().hex
         response['X-Scooby'] = unique_hex
+        start = datetime.now()
         # Set data in redis for 2 mins.
         redis.set(unique_hex, request.scooby_data.as_json(), 120)
+        end = datetime.now()
+        time_taken = round((end - start).total_seconds() * 1000.0)
+        response['X-Scooby-overhead'] = time_taken
         return response
