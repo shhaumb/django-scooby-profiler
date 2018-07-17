@@ -1,7 +1,7 @@
 from django.apps import AppConfig
-from django.conf import settings
 
 from .plugins_finder import get_plugins
+from . import settings
 
 
 class ScoobyAppConfig(AppConfig):

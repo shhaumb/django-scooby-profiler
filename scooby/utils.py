@@ -3,8 +3,9 @@ import sys
 import redis
 import inspect
 
-from django.conf import settings
 from django.db.models import Model
+
+from . import settings
 
 
 def get_redis():

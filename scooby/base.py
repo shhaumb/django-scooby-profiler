@@ -4,7 +4,8 @@ from .plugins_finder import get_plugins
 
 
 class ScoobyData(object):
-    def __init__(self):
+    def __init__(self, profiler=None):
+        self.profiler = profiler
         self.plugins = get_plugins()
         self.plugins_data = {}
         for plugin in self.plugins:

@@ -11,5 +11,6 @@ setup(
     packages=find_packages(),
     install_requires=[
         'redis==2.10.6',
+        'pyjwt==1.5.3',
     ]
 )
