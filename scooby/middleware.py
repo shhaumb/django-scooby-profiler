@@ -5,12 +5,10 @@ import cProfile
 from datetime import datetime
 
 from .base import ScoobyData
-from .utils import get_redis
+from .utils import get_backend
 
 from . import settings
 
-
-redis = get_redis()
 
 class ScoobyMiddleware(object):
     def get_cookie_config(self, request):
@@ -53,17 +51,18 @@ class ScoobyMiddleware(object):
         unique_hex = uuid.uuid4().hex
         response['X-Scooby'] = unique_hex
         start = datetime.now()
-        # Set data in redis for 2 mins.
-        redis.set(unique_hex, request.scooby_data.as_json(), 120)
+        # Set data in backend for 2 mins.
+        backend = get_backend()
+        backend.set(unique_hex, request.scooby_data.as_json(), 120)
         if cookie_config.get('cprofile'):
-            # Set cProfile stats in redis for 2 mins.
+            # Set cProfile stats in backend for 2 mins.
             profiler = request.scooby_data.profiler
             profiler.disable()
             temp_stats_filename = '/etc/%s.stats' % unique_hex
             profiler.dump_stats(temp_stats_filename)
             f = open(temp_stats_filename, 'rb')
             stats_key = unique_hex + '-pstats'
-            redis.set(stats_key, f.read(), 120)
+            backend.set(stats_key, f.read(), 120)
             f.close()
             os.remove(temp_stats_filename)
         end = datetime.now()

@@ -1,16 +1,22 @@
 import os
 import sys
-import redis
 import inspect
+import importlib
 
 from django.db.models import Model
 
 from . import settings
 
 
-def get_redis():
-    return redis.StrictRedis(**settings.SCOOBY_REDIS_CONFIG)
-
+global_backend = None
+def get_backend():
+    global global_backend
+    if global_backend is None:
+        backend_module_path, backend_class_name = settings.SCOOBY_BACKEND.rsplit('.', 1)
+        backend_module = importlib.import_module(backend_module_path)
+        backend_class = getattr(backend_module, backend_class_name)
+        global_backend = backend_class()
+    return global_backend
 
 def curate_filename(filename):
     for path in reversed(sys.path):
