@@ -64,7 +64,7 @@ INSTALLED_APPS = [
 ]
 ```
 
-2) Add this middeware to `MIDDLEWARE` / `MIDDLEWARE_CLASSES` setting:
+2) Add this middeware to `MIDDLEWARE_CLASSES` setting (usage with new style middlewares is not supported yet):
 ```python
 MIDDLEWARE_CLASSES = [
   'scooby.middleware.ScoobyMiddleware',
