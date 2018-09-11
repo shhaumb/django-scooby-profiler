@@ -15,7 +15,7 @@ because it injects its own html by rendering which takes time.
 3) You have to switch on debugging in chrome extension, only then backend will collect profiled data for all queries.
 This way, the overhead caused by debugging is not always ON by default.
 
-Here's how these are mitigated in django-scooby-profiler.
+Here's how the issues are mitigated in django-scooby-profiler.
 All the profiled data collected is dumped to a backend (E.g. Redis) where the data resides temporarily.
 The chrome extension collects those data and renders it to you for different HTTP requests.
 
@@ -56,7 +56,23 @@ pip3 install django-scooby-profiler
 
 ## Backend configuration
 
-Add following manadatory settings:
+1) Add 'scooby' to `INSTALLED_APPS` setting.
+```python
+INSTALLED_APPS = [
+  ...,
+  'scooby',
+]
+```
+
+2) Add this middeware to `MIDDLEWARE` / `MIDDLEWARE_CLASSES` setting:
+```python
+MIDDLEWARE_CLASSES = [
+  'scooby.middleware.ScoobyMiddleware',
+  ...,
+]
+```
+
+3) Add following manadatory settings:
 
 * **SCOOBY_SECRET_KEY** (type: string)
 
@@ -81,7 +97,7 @@ SCOOBY_REDIS_BACKEND_CONFIG = {
 }
 ```
 
-Add scooby base url to your project's urlconf by
+4) Add scooby base url to your project's urlconf by
 
 ```
 urlpatterns = [
