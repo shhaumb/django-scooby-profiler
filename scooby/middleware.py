@@ -3,6 +3,7 @@ import jwt
 import uuid
 import cProfile
 from datetime import datetime
+from django.utils.deprecation import MiddlewareMixin
 
 from .base import ScoobyData
 from .utils import get_backend
@@ -10,7 +11,7 @@ from .utils import get_backend
 from . import settings
 
 
-class ScoobyMiddleware(object):
+class ScoobyMiddleware(MiddlewareMixin):
     def get_cookie_config(self, request):
         if not settings.SCOOBY_DEBUG:
             return
