@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 # setup the project
 setup(
     name="django-scooby-profiler",
-    version="2.0.0",
+    version="2.0.1",
     url="https://github.com/shhaumb/django-scooby-profiler",
     author="Shubham Jain",
     author_email="sj.iitr@gmail.com",
