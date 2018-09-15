@@ -64,9 +64,9 @@ INSTALLED_APPS = [
 ]
 ```
 
-2) Add this middeware to `MIDDLEWARE_CLASSES` setting (usage with new style middlewares is not supported yet):
+2) Add this middeware to `MIDDLEWARE`/`MIDDLEWARE_CLASSES` setting:
 ```python
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
   'scooby.middleware.ScoobyMiddleware',
   ...,
 ]
@@ -99,6 +99,15 @@ SCOOBY_REDIS_BACKEND_CONFIG = {
 
 4) Add scooby base url to your project's urlconf by
 
+with Django 2.x.x:
+```
+urlpatterns = [
+    ...,
+    path('scooby/', include('scooby.urls')),
+]
+```
+
+with lower versions of Django:
 ```
 urlpatterns = [
     ...,
