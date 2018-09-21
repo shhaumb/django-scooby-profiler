@@ -3,13 +3,13 @@ from setuptools import setup, find_packages
 # read the contents of README file
 from os import path
 this_directory = path.abspath(path.dirname(__file__))
-with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+with open(path.join(this_directory, 'README.md')) as f:
         long_description = f.read()
 
 # setup the project
 setup(
     name="django-scooby-profiler",
-    version="2.0.3",
+    version="2.0.4",
     url="https://github.com/shhaumb/django-scooby-profiler",
     author="Shubham Jain",
     author_email="sj.iitr@gmail.com",
