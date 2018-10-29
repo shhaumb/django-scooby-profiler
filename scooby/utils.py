@@ -37,7 +37,9 @@ def get_repr(value):
     except NameError:
         # Python3
         unicode_cls = str
-    if isinstance(value, (
+    if type(value).__name__ == 'SimpleLazyObject':
+        return '<SimpleLazyObject>'
+    elif isinstance(value, (
             int, float, bool, str, unicode_cls, type(None))):
         return repr(value)
     elif isinstance(value, Model):
