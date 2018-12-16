@@ -21,6 +21,8 @@ def get_escaped_params(params):
             escaped_params.append(escaped_string(param.decode("iso-8859-1")))
         elif isinstance(param, bool):
             escaped_params.append(int(param))
+        elif isinstance(param, datetime):
+            escaped_params.append(param.isoformat())
         else:
             escaped_params.append(param)
     return tuple(escaped_params)
