@@ -1,7 +1,5 @@
 import json
 
-from django.core.serializers.json import DjangoJSONEncoder
-
 from .plugins_finder import get_plugins
 
 
@@ -40,9 +38,6 @@ class ScoobyData(object):
         for plugin_name in self.plugins_data:
             plugin_data = self.plugins_data[plugin_name]
             plugins_data_json[plugin_name] = plugin_data.as_json_dict()
-        return json.dumps(
-            {
-                'plugins_data': plugins_data_json,
-            },
-            default=DjangoJSONEncoder,
-        )
+        return json.dumps({
+            'plugins_data': plugins_data_json
+        })
