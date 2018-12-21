@@ -1,5 +1,5 @@
 import threading
-from datetime import datetime
+from datetime import datetime, date
 
 from django.db.models.sql.compiler import SQLCompiler
 
@@ -21,7 +21,7 @@ def get_escaped_params(params):
             escaped_params.append(escaped_string(param.decode("iso-8859-1")))
         elif isinstance(param, bool):
             escaped_params.append(int(param))
-        elif isinstance(param, datetime):
+        elif isinstance(param, (datetime, date)):
             escaped_params.append(param.isoformat())
         else:
             escaped_params.append(param)

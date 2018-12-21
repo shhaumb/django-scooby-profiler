@@ -9,7 +9,7 @@ with open(path.join(this_directory, 'README.md')) as f:
 # setup the project
 setup(
     name="django-scooby-profiler",
-    version="2.0.6",
+    version="2.0.7",
     url="https://github.com/shhaumb/django-scooby-profiler",
     author="Shubham Jain",
     author_email="sj.iitr@gmail.com",
