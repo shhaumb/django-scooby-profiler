@@ -1,6 +1,7 @@
 import threading
 from datetime import datetime, date
 
+from django.contrib.postgres.fields.jsonb import JsonAdapter
 from django.db.models.sql.compiler import SQLCompiler
 
 from scooby.plugins_base import Plugin
@@ -23,6 +24,8 @@ def get_escaped_params(params):
             escaped_params.append(int(param))
         elif isinstance(param, (datetime, date)):
             escaped_params.append(param.isoformat())
+        elif isinstance(param, JsonAdapter):
+            escaped_params.append(param.adapted)
         else:
             escaped_params.append(param)
     return tuple(escaped_params)
